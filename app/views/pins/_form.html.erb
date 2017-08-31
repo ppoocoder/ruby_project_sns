@@ -1,0 +1,112 @@
+<!-- SNS 작성글 폼 render to new-->
+
+<%= form_for @pin, html: {multipart: true} do |f| %>
+ <!--에러 메세지 생성-->
+  <% if @pin.errors.any? %>     
+    <div id="error_explanation">
+      <h2><%= pluralize(@pin.errors.count, "error") %> prohibited this pin from being saved:</h2>
+
+      <ul>
+      <% @pin.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+  
+   <div class="row">
+    <div class="col s12">
+      <ul class="tabs">
+        <li class="tab col s3"><a href="#test1"><i class="fa fa-instagram fa-4x" aria-hidden="true"></i></a></li>
+        <li class="tab col s3"><a href="#test2"><i class="fa fa-wpforms fa-4x" aria-hidden="true"></i></a></li>
+        <li class="tab col s3"><a href="#test3"><i class="fa fa-link fa-4x" aria-hidden="true"></i></a></li>
+        <li class="tab col s3"><a href="#test4"><i class="fa fa-youtube-play fa-4x" aria-hidden="true" ></i></a></li>
+      </ul>
+    </div>
+    <div id="test1" class="col s12"> 
+            <div class="card-content">
+             <div class="input-field">  
+              <%= f.select :task, options_for_select(['sns', 1],1) %>
+             </div>    
+               <div class ="input_field">
+                  <input type="text" id="country" name ="country" />
+                  <input type="hidden" id="country_code" name ="country_code"/>
+               </div>        
+               
+             
+             
+              <div class="input-field">
+                <%=f.label :p_description %>
+                <%= f.text_area :p_description, class: 'materialize_textarea', placeholder: '음식을 소개해주세요!', style: 'width: 580px; height: 200px' %>
+            </div>
+            <div class="input_field">
+                <%= f.label :pin_image %><br>
+                <%= f.file_field :pin_image %>
+            </div> 
+           
+            <div class="input-field actions">
+                <%= f.submit "작성하기" , class: "btn"%>
+            </div>
+          </div>  
+     </div>    
+    <div id="test2" class="col s12">
+      특별한 레시피비법과 특별히 경험한 식사 문화적 지식을 공유해보세요.
+     <ul>
+     <li class="blog_write"> 
+        <img src="/app/assets/images/images(1).jpg" alt="블로그 작성하러 가기">
+    <%= link_to  '블로그 작성하러가기', new_blog_post_path  %>
+    </li>
+    <li class="recipe_write">
+        <img src="/app/assets/images/sharecooking.jpg" alt="블로그 작성하러 가기">
+    <%= link_to  '레시피 작성하러 가기', new_recipe_blog_path %>
+    </li></ul>
+    </div>
+    <div id="test3" class="col s12">
+     다른 사이트에서 본 레시피 혹은 블로그등  공유를 원하는 페이지의 url를 입력해주세요.
+       
+        <div class="row">
+    <form class="col s12">
+      <div class="row">
+        <div class="input-field col s12">
+          <textarea id="textarea1" class="materialize-textarea" placeholder=" url를 입력해주세요."></textarea>
+          <label for="textarea1">url</label>
+        </div>
+      </div>
+    </form>
+  </div></div>
+    <div id="test4" class="col s12">  youtube, 네이버 tv, 카카오tv등  공유를 원하는 영상 url 혹은 소스를 입력해주세요.
+        <div class="row">
+    <form class="col s12">
+      <div class="row">
+        <div class="input-field col s12">
+          <textarea id="textarea1" class="materialize-textarea" placeholder=" url를 입력해주세요."></textarea>
+          <label for="textarea1">url</label>
+        </div>
+      </div>
+    </form>
+  </div>  </div>
+  </div>
+
+<% end%>  
+
+<script>
+    $(document).ready(function(){
+    $('.collapsible').collapsible();
+  });
+        
+</script>
+
+
+<script src="asset/javascripts/countrySelect.js"></script>
+<script>
+
+  $("#country").countrySelect();
+</script>
+
+<script>
+
+
+  $(document).ready(function(){
+    $('ul.tabs').tabs();
+  });
+</script>

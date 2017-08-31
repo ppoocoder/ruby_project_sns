@@ -1,0 +1,64 @@
+<p id="notice"><%= notice %></p>
+
+ </nav>
+ <div class="container" >
+    <h1>실시간 업데이트된 Blog</h1>
+    <div class="row grid">
+    <% @blog_posts.each do |blog_post| %>
+      
+      <div class="col s12 m3 grid-item">
+        <div class="card">
+            <div class="card-image waves-effect waves-block waves-light">
+               <% if blog_post.blogs_pic.url %>
+                    <img src="<%= blog_post.blogs_pic.url %>" >
+              
+               <% end %>
+              
+            </div>
+              
+            <div class="card-content">
+               <%= blog_post.likes(blog_post).size %>
+               <% if current_user %>
+                   <% if current_user.is_like?(blog_post) %>
+                        <%= link_to "좋아요 취소", blog_post_like_path(blog_post), method: "post" %>
+                   <% else %>
+                          <%= link_to "좋아요", blog_post_like_path(blog_post), method: "post" %>
+                   <% end %>
+               <%end%>
+              <span class="card-title activator grey-text text-darken-4"><%= blog_post.title %><i class="material-icons right">more_vert</i></span>
+               
+                <div class="card-title">
+                 <% if blog_post.user.avatar.url %>
+                   <img class="circle thumbnail" src="<%= blog_post.user.avatar.thumb.url %>" >
+                 <%end%>
+                <%= blog_post.user.username %><p><%= blog_post.created_at %></p>
+                </div>
+               
+              <p><a href="#">This is a link</a></p>
+            </div>
+            <div class="card-reveal">
+              <span class="card-title grey-text text-darken-4"><%= blog_post.title %><i class="material-icons right">close</i></span>
+              <p>설명: <br>
+              
+              <%= b_render_with_hashtags(blog_post.b_description) %></p>
+              
+               <!--식재료 요약 -->
+               
+            <div class="card-action">
+              <%= link_to  '레시피 따라하기 ',recipe_blog_path(recipe_blog) %>
+              
+              <% if current_user %>
+                  <% if recipe_blog.user.id == current_user.id %>
+                     <%= link_to "[ 삭제 ]", recipe_blog_path(recipe_blog), method: "delete", data: { confirm: 'Are you sure?'}, class: "right" %>
+                     <%= link_to "[ 수정 ]",  edit_recipe_blog_path(recipe_blog), class: "right" %>
+                  <% end %> 
+              <% end %>
+          </div>
+        </div>
+      </div>            
+     <%end%>    
+    </div>
+</div>
+
+
+<%= link_to 'New Blog Post', new_blog_post_path %>

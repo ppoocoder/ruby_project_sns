@@ -1,0 +1,28 @@
+<%= tinymce %>
+<%= form_for(blog_post) do |f| %>
+  <% if blog_post.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(blog_post.errors.count, "error") %> prohibited this blog_post from being saved:</h2>
+
+      <ul>
+      <% blog_post.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+    
+  <% end %>
+  <div class="field">
+  <div class="input_field" >
+        <%= f.text_field :title, input_html: { class: 'materialize_textarea' }, as: :text ,style: 'width: 500px; height: 80px' %>
+        
+         </div>
+         
+         <div class="input_field">
+             <%= f.text_area :content, :class => "tinymce", :rows => 40, :cols => 120 %>
+         </div>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

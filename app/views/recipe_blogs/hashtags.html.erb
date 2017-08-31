@@ -1,0 +1,35 @@
+</nav>
+
+<p id="notice"><%= notice %></p>
+
+<h1>Listing Posts</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Titile</th>
+      <th>description</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @recipe_blogs.each do |recipe_blog| %>
+      <tr>
+        <td><%= recipe_blog.title %></td>
+        <td><%= r_render_with_hashtags(recipe_blog.r_description) %></td>
+        <% recipe_blog.ingrediants.each do |ingrediant| %>
+        <td><%= render_with_hashtags(ingrediant.name) %>
+            <%end%></td>
+      
+        
+        <td><%= recipe_blog.user.username%></td>
+        <td><%= link_to 'Show', recipe_blog %></td>
+        <td><%= link_to 'Edit', edit_recipe_blog_path(recipe_blog) %></td>
+        <td><%= link_to 'Destroy',recipe_blog, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>

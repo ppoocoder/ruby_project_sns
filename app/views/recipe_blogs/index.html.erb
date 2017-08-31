@@ -1,0 +1,72 @@
+ </nav>
+ <div class="container" >
+    <h1>실시간 RECIPES</h1>
+    <div class="row grid">
+        <% @recipe_blogs.each do |recipe_blog| %>  
+      <div class="col s12 m3 grid-item">
+        <div class="card">
+            <div class="card-image waves-effect waves-block waves-light">
+               <% if recipe_blog.blogs_main_pic.url %>
+                    <img src="<%= recipe_blog.blogs_main_pic.url %>" >
+              
+               <% end %>
+              
+            </div>
+              
+        
+            <div class="card-content">
+               <%= recipe_blog.likes.size %>
+               <% if current_user %>
+                   <% if current_user.is_like?(recipe_blog) %>
+                        <%= link_to "좋아요 취소", recipe_blog_like_path(recipe_blog), method: "post" %>
+                   <% else %>
+                          <%= link_to "좋아요", recipe_blog_like_path(recipe_blog), method: "post" %>
+                   <% end %>
+               <%end%>
+              <span class="card-title activator grey-text text-darken-4"><%= recipe_blog.title %><i class="material-icons right">more_vert</i></span>
+               
+                <div class="card-title">
+                 <% if recipe_blog.user.avatar.url %>
+                   <img class="circle thumbnail" src="<%= recipe_blog.user.avatar.thumb.url %>" >
+                 <%end%>
+                <%= recipe_blog.user.username %><p><%= recipe_blog.created_at %></p>
+                </div>
+               
+              <p><a href="#">This is a link</a></p>
+            </div>
+            <div class="card-reveal">
+              <span class="card-title grey-text text-darken-4"><%= recipe_blog.title %><i class="material-icons right">close</i></span>
+              <p>설명: <br>
+              
+              <%= r_render_with_hashtags(recipe_blog.r_description) %></p>
+              
+               <!--식재료 요약 -->
+               <div >   
+                <span> 필요한 식재료 </span>
+                   <p><ul>   - 인라인으로 수정 
+                     <% recipe_blog.ingrediants.each do |ingrediant| %>
+                      <li><%= render_with_hashtags(ingrediant.name) %></li> 
+                     <%end%>
+                  </ul></p>  
+              </div>
+              <div class="recipe_review">
+                <!--추가 레시피 리뷰 -->
+                리뷰 1
+              </div>
+              <!---->
+            </div>
+            <div class="card-action">
+              <%= link_to  '레시피 따라하기 ',recipe_blog_path(recipe_blog) %>
+              
+              <% if current_user %>
+                  <% if recipe_blog.user.id == current_user.id %>
+                     <%= link_to "[ 삭제 ]", recipe_blog_path(recipe_blog), method: "delete", data: { confirm: 'Are you sure?'}, class: "right" %>
+                     <%= link_to "[ 수정 ]",  edit_recipe_blog_path(recipe_blog), class: "right" %>
+                  <% end %> 
+              <% end %>
+          </div>
+        </div>
+      </div>            
+     <%end%>    
+    </div>
+</div>

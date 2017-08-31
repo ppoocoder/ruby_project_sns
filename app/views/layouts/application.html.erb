@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Workspace</title>
+    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+   <%= action_cable_meta_tag %>
+   <%= csrf_meta_tags %>
+ <!-- Compiled and minified CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.1/css/materialize.min.css">
+
+  <!-- Compiled and minified JavaScript -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.1/js/materialize.min.js"></script>
+          <!--masonry cdn -->
+  <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.js"></script>
+
+        <!--imageloaded cdn-->
+  <script src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"rel="stylesheet">
+          
+   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">          <!--materialize cdn--> 
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>    
+</head>
+<body>
+     <!-- 네비 (최상단) -->
+  <nav class="nav-extended green lighten-1">
+      <div class="nav-wrapper black-light">
+        <a href="/" class="brand-logo"><i class="material-icons">cloud</i>Test cooking SNS</a>
+        <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
+    
+        <ul class="right hide-on-med-and-down">
+            
+              <!--<li><a class="btn-icon" for="search"><i class="material-icons">search</i></a></li>   -->
+         <% if user_signed_in? %>
+             <li><a class="dropdown-button btn-floating btn-large waves-effect waves-light" herf="#" data-activates="dropdown_alert"><i class="material-icons black">add_alert</i></a></li>
+                 <ul id='dropdown_alert' class='dropdown-content'>
+                    <li><a href="#!"> 야야님이 회원님의 레시피글에 리뷰를 달았습니다.</a></li>
+                    <li><a href="#!"> 호호 님이 회원님을 팔로워 했습니다. </a></li>
+                    <li class="divider"></li>
+                    <li><a href="#!">히히 님이 회원님의 블로그의 글을 공유했습니다.</a></li>
+                    <li><a href="#!"><i class="material-icons">view_module</i>1시간후 라이브 방송 '똠양꿍 만들기'가 방송됩니다. </a></li>
+                  </ul>
+             <li><%= link_to 'Mypins' ,pins_path %></li>    
+             <li><%= link_to 'My account' ,edit_user_registration_path %></li>
+             <li><%= link_to '로그아웃' ,destroy_user_session_path, method: :delete %></li>
+            <% else %>
+              <li><%= link_to '로그인' , new_user_session_path %></li>
+              <li><%= link_to '회원가입', new_user_registration_path %></li>
+            <% end %>
+        </ul>
+        <!--모바일 환경 설정-->
+        <ul class="side-nav" id="mobile-demo">      
+             <li><a href="#"><i class="material-icons">search</i></a></li>   
+            <% if user_signed_in? %>
+             <li><p><%= current_user.username %>님 환영합니다.</p></li>
+             <li><%= link_to 'Mypins' ,pins_path %></li>    
+             <li><%= link_to 'My account' ,edit_user_registration_path %></li>
+             <li lang=ko><%= link_to 'logout', destroy_user_session_path, method: :delete %></li>
+            <% else %>
+            <li><%= link_to '로그인' , new_user_session_path %></li>
+            <li><%= link_to '회원가입', new_user_registration_path %></li>
+            <% end %>
+        </ul>
+      </div>
+
+
+<%= yield %>
+
+<script>
+$(function(){
+     
+  
+        // 알람기능 버튼 드롭다운 설정
+    
+  $('.dropdown-button').dropdown({
+      inDuration: 300,
+      outDuration: 225,
+      constrainWidth: false, // Does not change width of dropdown to that of the activator
+      hover: false, // Activate on hover
+      gutter: 0, // Spacing from edge
+      belowOrigin: true, // Displays dropdown below the button
+      alignment: 'left', // Displays dropdown with edge aligned to the left of button
+      stopPropagation: false // Stops event propagation
+    }
+  );
+});
+</script>
+
+</body>
+</html>

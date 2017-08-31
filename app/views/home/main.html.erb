@@ -1,0 +1,257 @@
+ </nav>
+ <div class="nav-content green lighten-1">
+      <ul class="tabs tabs-transparent">
+        <li class="tab"><a href="#test1">인기</a></li>
+        <li class="tab"><a class="active" href="#test2">내 주변 </a></li>
+        <li class="tab"><a href="#test3">TV</a></li>
+        
+        <li class="content-wrapper"></li>
+        <li class="last right"> 
+              <p class="alert"><%= alert %></p>
+                <% if user_signed_in? %>
+                  <p><%= current_user.username %>님 환영합니다.</p>
+                <%end%>
+        </li>
+        <li> <%= link_to "[ 라이브 보러가기 ]",rooms_path  %></li>
+      </ul>
+</div>
+
+ 
+   <div class="nav-wrapper">
+      <form>
+        <div class="input-field">
+          <input id="search" type="search" required><i class="material-icons">close</i>
+        </div>
+      </form>
+    </div>
+   
+
+ </nav>
+
+
+ 
+  
+ 
+<!-- 서비스 소개 -->
+ <div class="carousel carousel-slider center" data-indicators="true">
+    
+     
+    <a class="carousel-item black white-text" href="#one!"><h2>해외 BEST FOOD </h2> <p class="white-text">당신의 맛본 best 해외 요리를 소개해주세요. </p><img src="https://lorempixel.com/800/400/food/1"></a>
+    <a class="carousel-item black white-text" href="#two!"><h2>recipe tip </h2>
+      <p class="white-text">당신의 해외 요리 레시피를 올리고 공유하거나 특별한 식사를 함께 만들어봐요.</p><img src="https://lorempixel.com/800/400/food/3"></a>
+    <a class="carousel-item black white-text" href="#three!"><h2>order easily the ingredient</h2>
+      <p class="white-text">당신 주변환경에 맞는레시피에 맞는 식재료를 쉽게 주문하세요. </p><img src="https://lorempixel.com/800/400/food/4"></a>
+     <a class="carousel-item black white-text"  href="#four!"> <h2>enjoy eat delicious food</h2>
+      <p class="white-text">주변에 가까운 맛집을 방문하고 친구들과 맛의 즐거움을 즐겨보세요.</p><img src="https://lorempixel.com/800/400/food/4"></a>
+  </div>
+    
+    
+ <div id="test1" class="col s12">인기</div>  
+ 
+ <!-- 팔로워 들의 좋아요, VIEW COUNT 로 정렬-->
+  <div id="test2" class="col s12">내주변
+   <%= render partial: "pins/near" %>
+   </div>
+  <div id="test3" class="col s12">TV
+  <%= render partial: "pins/tv" %>
+  </div>
+  <p class="notice"><%= notice %></p>
+ 
+<div class=" container">
+ 
+  <h1>실시간 food feed</h1>
+ 
+  <div class="row grid">
+   <% @pins.each do |pin| %>   
+    <div class="col s12 m3 grid-item">
+   
+      <div class="card">
+      
+           <% if pin.user.avatar %>
+        <div class="card-title">
+               <img class="circle thumbnail" src="<%= pin.user.avatar.thumb.url %>" >
+          <%= pin.user.username %> <%=pin.user.country %><div class="right chip red"><i class="material-icons">camera</i>sns</div><p><%= pin.created_at %></p>
+        </div>
+         <% end %>
+         
+        <div class="card pin" data-pin-id="<%= pin.id %>">
+          <a class="modal-trigger" href="#modal<%= pin.id %>">
+            <div class="card-image">
+              <% if pin.pin_image.url %>
+                <img src="<%= pin.pin_image.url %>" >
+                <span class="card-title">#hashtags</span>
+                
+              <% end %>
+            </div>
+            <div class="card-content">
+                <div class="country-select">
+                  <div class="flag <%= pin.country_code %>">  </div>
+                   <p><%= pin.country%></p>
+                  </div>
+              <div><p><%= p_render_with_hashtags(pin.p_description) %></p></div>
+            </div>
+          </a>
+    
+        <div class="card-action">
+          <%= pin.likes(pin).size %> 명이 좋아합니다.
+            <% if current_user %>
+              <% if pin.user.id == current_user.id %>
+                 <%= link_to "[ 삭제 ]", pin_path(pin), method: "delete", data: { confirm: 'Are you sure?'}, class: "right" %>
+                 <%= link_to "[ 수정 ]", edit_pin_path(pin), class: "right" %>
+              <% end %> 
+            <% end %>
+        </div>
+        </div>   
+         
+           
+           
+           <!-- Modal Trigger -->
+    
+          
+        <div id="modal<%=pin.id%>" class="modal">
+          <div class="modal-content">
+            <div class="column">
+              <div class="col s12 m6">
+               <div class="card pin">
+                 <div class="card-image">
+                    <% if pin.pin_image.url %>
+                      <img src="<%= pin.pin_image.url %>" >
+                    <% end %>
+                  </div>
+                </div>
+              </div>  
+              <div class="col s12 m6">
+                <div class="card">
+                  <div class="title">
+                    <% if pin.user.avatar.url %>
+                      <img class="circle thumbnail" src="<%= pin.user.avatar.thumb.url %>" >
+                    <% end %>
+                    <span class="card-title"><%= pin.user.username %></span>
+                    <span><%= pin.created_at %></span><div class=" chip red"><i class="material-icons">camera</i>sns</div>
+                    <% if user_signed_in? && current_user != pin.user %>   
+                      <% if current_user.followings.include?(pin.user) %>
+                          <%= form_tag follow_path(pin.user.id), method: :delete, class: "right" do %>
+                           <button class="right btn">팔로우 취소</button>
+                          <%end%>
+                      <%else%>
+                          <%= form_tag follows_path, class: "right" do %>
+                            <input type="hidden" name="followed_id" value="<%= pin.user.id %>" />
+                            <button class="btn">팔로우</button>
+                          <%end%> 
+                      <%end%>
+                    <%end%>  
+                  </div>
+                  
+                  <div class="content">
+                    <div class="country-select">
+                  <div class="flag <%= pin.country_code %>">  </div>
+                   <p><%= pin.country%></p>
+                  </div>
+                        <p><%= p_render_with_hashtags(pin.p_description) %></p>
+                  </div>
+                  <% if current_user %>
+                    <% if current_user.id == pin.user.id %>
+                      <div><%= link_to "[ 삭제 ]", pin_path(pin), method: "delete", data: { confirm: 'Are you sure?'}, class: "right" %>  <%= link_to "[ 수정 ]", edit_pin_path(pin), class: "right"%></div> 
+                    <% end %> 
+                  <% end %>
+                  <div class="card-action">
+                    <%= pin.likes(pin).size %> 명이 좋아합니다.
+                    <% if current_user %>
+                      <% if current_user.is_like?(pin) %>
+                        <%= link_to "좋아요 취소", pin_like_path(pin), method: "post" %>
+                      <% else %>
+                        <%= link_to "좋아요", pin_like_path(pin), method: "post" %>
+                      <% end %>
+                    <% end %>
+                       <div class= social_share_button> 
+                        <%= social_share_button_tag(pin.p_description, :rel => "", 'data-twitter-title' => 'TheTitleForTwitter', 'data-facebook-title' =>'TheTitleForFacebook',:url => "http://myapp.com/foo/bar", :image => "http://foo.bar/images/a.jpg", desc: "The summary of page", via: "MyTwitterName") %>
+                      </div>
+                                    
+                    <% if pin.comments.present? %>
+                    <!--댓글  -->
+                      <ul class="collection">
+                        <% pin.comments.each do |comment| %>
+                          <li class="collection-item">
+                          <span class="title"><%= comment.user.username %></span>
+                          <span class="right"><%= comment.created_at %></span>
+                          <p class="pre-line"><%= comment.content %></p>
+                          <% if user_signed_in?%>
+                            <% if comment.user.id == current_user.id %>
+                              <div><%= link_to "삭제", pin_comment_path(pin, comment), method: "delete" %></div>
+                            <% end %>
+                          <% end%>
+                          </li>
+                        <% end %>
+                      </ul>
+                    <% end %>
+                    <%= form_tag pin_comments_path(pin) do %>
+                      <div class="input-field">
+                        <%= text_area_tag :content, nil, class: "materialize-textarea", placeholder: "댓글을 작성해주세요.", required: true %>
+                      </div>
+                      <div class="input-field">
+                        <%= button_tag "댓글 쓰기", class: "btn" %>
+                      </div>
+                    <% end %>
+                  </div>
+
+                </div>  
+            
+            
+              </div>
+    
+            </div>  
+          </div>
+          <div class="modal-footer right">
+            <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat" >레시피 따라하기</a>
+            <a href="#!" class="modal-action modal-close waves-effect waves-red btn-flat" > 재료 사러가기</a>
+                    
+                   
+          </div>
+      
+        </div>
+    <!-- modal end -->
+     
+        
+     
+      </div>
+      <!--card -->
+   
+    
+     
+       
+       
+       
+    </div>
+  <%end%>
+  
+  </div>
+  
+</div>  
+
+
+
+
+  
+
+ 
+<script>
+$(document).ready(function(){
+   $('.carousel.carousel-slider').carousel({fullWidth: true}); //슬라이더 스트립트
+   
+   $('.grid').imagesLoaded(function(){
+    $('.grid').masonry({
+      // options
+      itemSelector: '.grid-item',
+      columnWidth: '.grid-item'
+    });
+  });
+});
+
+//모달 스크
+$('.card-image').on('click',function(){
+    $('.modal').modal();
+  });
+  
+</script>
+
+   

@@ -1,0 +1,80 @@
+
+<!-- pin view 페이지 partial on index  as popup page (pannel) -->
+<div class="card">
+    
+    <div class="card-content">
+     <% if pin.user.avatar %>
+      <span class="card-title">
+           <img class="circle thumbnail" src="<%= pin.user.avatar.thumb.url %>" ><%= pin.user.username %><div class=" chip red"><i class="material-icons">camera</i>sns</div> <p><%= pin.created_at %></p></span>
+     <% end %>
+       <% if user_signed_in? && current_user != pin.user %>
+        <!--팔로우 기능-->
+         <% if current_user.followings.include?(pin.user) %>
+           <%= form_tag follow_path(pin.user.id), method: :delete, class: "right" do %>
+           <button class="right btn">팔로우 취소</button>
+           <%end%>
+         <%else%>
+           <%= form_tag follows_path, class: "right" do %>
+             <input type="hidden" name="followed_id" value="<%= pin.user.id %>" />
+             <button class="btn">팔로우</button>
+           <%end%> 
+         <%end%>
+       <%end%>    
+        
+      <div class="content">
+        <div class="card pin" data-pin-id="<%= pin.id %>">
+          <div class="card-image">
+            <!--pin 이미지 view-->
+            <% if pin.pin_image.url %>
+              <img src="<%= pin.pin_image.url %>" >
+            <% end %>
+          </div>
+               </div>
+         <p><%= p_render_with_hashtags(pin.p_description) %> </p> 
+      </div>
+    
+       <% if current_user.id == pin.user.id %>
+       <div><%= link_to "[ 삭제 ]", pin_path(pin), method: "delete", data: { confirm: 'Are you sure?'}, class: "right" %>  <%= link_to "[ 수정 ]", edit_pin_path(pin), class: "right"%> </span></div>
+       <% end %> 
+    </div>
+    
+    <div class="card-action">
+      <%= pin.likes(pin).size %> 명이 좋아합니다.
+      <% if current_user.is_like?(pin) %>
+        <%= link_to "좋아요 취소", pin_like_path(pin), method: "post" %>
+      <% else %>
+      <%= link_to "좋아요", pin_like_path(pin), method: "post" %>
+      <% end %>
+          
+        <div class= social_share_button> 
+        <%= social_share_button_tag(pin.p_description, :rel => "", 'data-twitter-title' => 'TheTitleForTwitter', 'data-facebook-title' =>'TheTitleForFacebook',:url => "http://myapp.com/foo/bar", :image => "http://foo.bar/images/a.jpg", desc: "The summary of page", via: "MyTwitterName") %>
+        </div>
+
+       <% if pin.comments.present? %>
+          <ul class="collection">
+              <!--댓글 기능-->
+          <% pin.comments.each do |comment| %>
+            <li class="collection-item">
+              <span class="title"><%= comment.user.username %></span>
+              <span class="right"><%= comment.created_at %></span>
+              <p class="pre-line"><%= comment.content %></p>
+              <% if comment.user.id == current_user.id %>
+                <div><%= link_to "삭제", pin_comment_path(pin, comment), method: "delete" %></div>
+              <% end %>
+            </li>
+          <% end %>
+          </ul>
+        <% end %>
+        <%= form_tag pin_comments_path(pin) do %>
+          <div class="input-field">
+            <%= text_area_tag :content, nil, class: "materialize-textarea", placeholder: "댓글을 작성해주세요.", required: true %>
+          </div>
+          <div class="input-field">
+            <%= button_tag "댓글 쓰기", class: "btn" %>
+          </div>
+        <% end %>
+           
+  </div>
+
+</div>
+        

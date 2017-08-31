@@ -1,0 +1,24 @@
+  <div class="nested-fields">
+      
+        <div class="input_field" >
+        
+        <%= f.text_field :cooking_recipe, input_html: { class: 'materialize_textarea' }, as: :text ,style: 'width: 580px; height: 120px', placeholder: '순서대로 레시피를 작성 해주세요' %>
+        
+          <a class="waves-effect waves-light btn-floating cyan pulse btn-file left " ><i class="material-icons">photo</i>
+              step 사진추가 
+           <%= f.file_field :blogs_cooking_pic, input_html: { onchange: 'readURL(this)' }  %>
+            </a>
+          
+          
+           <img id="img_prev" src="#" alt="your image" />
+          
+           <!--출처-->
+           <!--https://stackoverflow.com/questions/11485967/best-way-to-show-image-previews-before-upload-in-rails-carrierwave-->
+     </div>
+      <div class="links">
+        <% link_to_remove_association 'x', f , class: 'btn-floating btn-large waves-effect waves-light red' %>
+       </div>
+  </div>
+
+
+

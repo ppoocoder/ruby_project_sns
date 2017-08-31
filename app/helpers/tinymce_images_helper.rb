@@ -1,0 +1,2 @@
+module TinymceImagesHelper
+end

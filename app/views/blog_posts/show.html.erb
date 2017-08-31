@@ -1,0 +1,86 @@
+ </nav>
+  <div class="main_content"> 
+    <div id= "blog_post_top" class="row">
+      <div class= "blog_post_pic col s12 m4">
+            <!--blog_main 이미지 view-->
+             
+             <% if @blog_post.blog_post_pic.url %>
+              <img src="<%= @blog_post.blog_post_pic.url %>" >
+            <% end %>
+      </div>
+      <div id="blog_post_info" class="col s12 m8">
+        <h1> <%= @blog_post.title %></h1>
+         <p>설명: <br> <%= @blog_post.b_description %></p>        
+         <p> by <% if blog_post.user.avatar.url %> 
+         <%= blog_post.user.avatar.url %><% blog_post.user.username %></p><%end%>
+         <p>  <% blog_post.created_at</p>
+         쉐어 버튼 추가  
+
+      </div>
+    </div>
+    <div class="row">
+      <div class="col s12" id="blog_post_contents">
+        
+        <ul>
+          <% @blog_post.content %>
+          
+        </ul>
+      </div>
+       <div class="col s12">
+         리뷰(comment)추가 
+        <h2>잡학상식 </h2>
+        <ul>
+            <% if current_user %>
+          <% @recipe_blog.trivia_knows.each do |trivia_know| %>
+          <li>
+            <h4><%= trivia_know.title %></h4>
+            <p>by <%= @recipe_blog.current_user.username %> </p>  
+            <%= trivia_know.content %>
+            </li>
+            <%end%>
+            <%end%>
+        </ul>
+      </div>
+    </div>
+    <div class="row">
+     <div class="col s12 m12">
+    <%= link_to 'Edit', edit_recipe_blog_path(@recipe_blog) %>
+    <%= link_to 'Back', pins_path %>
+    <%= link_to 'Delete', recipe_blog_path, method: :delete, data: {confirm: "정말삭제하시겠습니까?"} %>
+      </div>
+    </div>
+  </div>
+
+  <div class="review-comment">
+    <% if @recipe_blog.comments.present? %>
+                    <!--댓글  -->
+    <ul class="collection">
+      <% @recipe_blog.comments.each do |comment| %>
+      <li class="collection-item">
+        <span class="title"><%= comment.user.username %></span>
+        <span class="right"><%= comment.created_at %></span>
+         <p class="pre-line"><%= comment.content %></p>
+        <% if user_signed_in?%>
+          <% if comment.user.id == current_user.id %>
+            <div><%= link_to "삭제", recipe_blog_comment_path(@recipe_blog, comment), method: "delete" %></div>
+          <% end %>
+        <% end%>
+      </li>
+      <% end %>
+    </ul>
+    <% end %>
+    <%= form_tag recipe_blog_comments_path(@recipe_blog) do %>
+    <div class="input-field">
+      <%= text_area_tag :content, nil, class: "materialize-textarea", placeholder: "댓글을 작성해주세요.", required: true %>
+    </div>
+    <div class="input-field">
+        <%= button_tag "댓글 쓰기", class: "btn" %>
+    </div>
+    <% end %>
+
+  </div>
+
+
+
+<%= link_to 'Edit', edit_blog_post_path(@blog_post) %> |
+<%= link_to 'Back', blog_posts_path %>

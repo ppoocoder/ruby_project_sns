@@ -1,0 +1,116 @@
+ </nav>
+
+
+  <div class="main_content"> 
+    <div id= "recipe_blog_top" class="row">
+      <div class= "recipe_main_pic col s12 m4">
+            <!--blog_main 이미지 view-->
+             
+             <% if @recipe_blog.blogs_main_pic.url %>
+              <img src="<%= @recipe_blog.blogs_main_pic.url %>" >
+            <% end %>
+      </div>
+      <div id="recipe_blog_info" class="col s12 m8">
+        <h1> <%= @recipe_blog.title %></h1>
+         <p>설명: <br> <%= @recipe_blog.r_description %></p>        
+      </div>
+    </div>
+    <div class="row">
+      <div class="col s12 m3" id="ingrediants">
+        <h2>식재료</h2>
+        <ul>
+          <% @recipe_blog.ingrediants.each do |ingrediant| %>
+          <li><%= ingrediant.name %></li>
+          <%end%>
+        </ul>
+      </div>
+      <div class="col s12 m9" id="directions">
+        <h2>레시피</h2>
+        <ul>
+          <% @recipe_blog.directions.each do |direction| %>
+          <li>
+            <h4><%= direction.step %></h4>
+            <% if direction.blogs_cooking_pic.url %>
+              <img src="<%= direction.blogs_cooking_pic.url %>" >
+            <% end %>
+            
+            <%= direction.cooking_recipe %>
+            </li>
+            <%end%>
+        </ul>
+      </div>
+       <div class="col s12 m9">
+        <h2>잡학상식 </h2>
+        <ul>
+          <% @recipe_blog.trivia_knows.each do |trivia_know| %>
+          <li>
+            <h4><%= trivia_know.title %></h4>
+            <p>by <%= @recipe_blog.current_user.username %> </p>  
+            <%= trivia_know.content %>
+            </li>
+            <%end%>
+        </ul>
+      </div>
+    </div>
+    <div class="row">
+     <div class="col s12 m12">
+    <%= link_to 'Edit', edit_recipe_blog_path(@recipe_blog) %>
+    <%= link_to 'Back', pins_path %>
+    <%= link_to 'Delete', recipe_blog_path, method: :delete, data: {confirm: "정말삭제하시겠습니까?"} %>
+      </div>
+    </div>
+  </div>
+
+  <div class="review-comment">
+    <% if @recipe_blog.comments.present? %>
+                    <!--댓글  -->
+    <ul class="collection">
+      <% @recipe_blog.comments.each do |comment| %>
+      <li class="collection-item">
+        <span class="title"><%= comment.user.username %></span>
+        <span class="right"><%= comment.created_at %></span>
+         <p class="pre-line"><%= comment.content %></p>
+        <% if user_signed_in?%>
+          <% if comment.user.id == current_user.id %>
+            <div><%= link_to "삭제", recipe_blog_comment_path(@recipe_blog, comment), method: "delete" %></div>
+          <% end %>
+        <% end%>
+      </li>
+      <% end %>
+    </ul>
+    <% end %>
+    <%= form_tag recipe_blog_comments_path(@recipe_blog) do %>
+    <div class="input-field">
+      <%= text_area_tag :content, nil, class: "materialize-textarea", placeholder: "댓글을 작성해주세요.", required: true %>
+    </div>
+    <div class="input-field">
+        <%= button_tag "댓글 쓰기", class: "btn" %>
+    </div>
+    <% end %>
+
+  </div>
+
+<%= link_to 'Edit', edit_recipe_blog_path(@recipe_blog) %> |
+<%= link_to 'Back', pins_path %>
+
+
+
+
+<script>
+     function readURL(blogs_cooking_pic) {
+        if (f.blogs_cooking_pic && f.blogs_cooking_pic[0]) {
+          var reader = new FileReader();
+
+          reader.onload = function (e) {
+            $('#img_prev')
+              .attr('src', e.target.result)
+              .width(150)
+              .height(200);
+          };
+
+          reader.readAsDataURL(f.blogs_cooking_pic[0]);
+        }
+     }
+    
+    
+</script>
