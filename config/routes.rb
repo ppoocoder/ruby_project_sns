@@ -28,6 +28,7 @@ Rails.application.routes.draw do
   resources :follows, only: [:create, :destroy]
   
   root 'home#main'
+  
   resources :blog_posts do
       post "/like", to: "likes#like_toggle"
       resources :comments, only: [:create, :destroy]
